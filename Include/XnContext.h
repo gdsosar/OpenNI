@@ -77,9 +77,9 @@ xnNodeInfoListFree(pNodesList);
 //---------------------------------------------------------------------------
 // Includes
 //---------------------------------------------------------------------------
-#include <XnTypes.h>
-#include <XnQueries.h>
-#include <XnPrdNodeInfoList.h>
+#include "XnTypes.h"
+#include "XnQueries.h"
+#include "XnPrdNodeInfoList.h"
 
 //---------------------------------------------------------------------------
 // Functions
