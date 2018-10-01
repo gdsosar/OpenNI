@@ -243,9 +243,18 @@ print "* Building OpenNI..."
 logger.info("Building OpenNI...")
 
 # Build
+COMPILER_PATH = "/usr/bin/g++-4.*"
 #execute_check("gacutil -u OpenNI.net > " + SCRIPT_DIR + "/Output/gacutil.txt", "Remove from GAC")
-execute_check('make ' + MAKE_ARGS + ' -C ' + SCRIPT_DIR + '/../Build clean > ' + SCRIPT_DIR + '/Output/Build' + PROJECT_NAME + '_clean.txt', 'Cleaning')
-execute_check('make ' + MAKE_ARGS + ' -C ' + SCRIPT_DIR + '/../Build > ' + SCRIPT_DIR + '/Output/Build' + PROJECT_NAME + '.txt', 'Building')
+
+# Look for required versions of g++
+if glob.glob(COMPILER_PATH): 
+    for check_file in glob.glob(COMPILER_PATH):
+        execute_check('make ' + MAKE_ARGS + ' CXX=' + COMPILER_PATH + ' -C ' + SCRIPT_DIR +  '/../Build clean > ' + SCRIPT_DIR + '/Output/Build' + PROJECT_NAME + '_clean.txt', 'Cleaning')
+        execute_check('make ' + MAKE_ARGS + ' CXX=' + COMPILER_PATH + ' -C ' + SCRIPT_DIR + '/../Build > ' + SCRIPT_DIR + '/Output/Build' + PROJECT_NAME + '.txt', 'Building')
+else:
+    print "error: g++ version '4.xx' was not found"
+    print "exiting..."
+    finish_script(1)
 
 #--------------Doxygen---------------------------------------------------------#
 print "* Creating Doxygen..."
@@ -431,13 +440,13 @@ print "* Building Samples in release configuration......"
 logger.info("Building Samples in release configuration...")
 
 # Build project solution
-execute_check("make " + MAKE_ARGS + " -C " + REDIST_DIR + "/Samples/Build " + " > "+SCRIPT_DIR+"/Output/BuildSmpRelease.txt", "Build samples in release")
+execute_check("make " + MAKE_ARGS + " CXX="+ COMPILER_PATH + " -C " + REDIST_DIR + "/Samples/Build " + " > "+SCRIPT_DIR+"/Output/BuildSmpRelease.txt", "Build samples in release")
 
 print "* Building Samples in debug configuration......"
 logger.info("Building Samples in debug configuration...")
 
 # Build project solution
-execute_check("make " + MAKE_ARGS + " CFG=Debug -C " + REDIST_DIR + "/Samples/Build > "+SCRIPT_DIR+"/Output/BuildSmpDebug.txt", "Build samples in debug")
+execute_check("make " + MAKE_ARGS + " CXX="+ COMPILER_PATH + " CFG=Debug -C " + REDIST_DIR + "/Samples/Build > "+SCRIPT_DIR+"/Output/BuildSmpDebug.txt", "Build samples in debug")
 
 # delete intermidiate files
 for sample in samples_list:
